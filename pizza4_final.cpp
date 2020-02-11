@@ -70,7 +70,7 @@ void processFile(string name, string outname = "def.out")
 int main() 
 {
   
-  processFile("ab.in", "a.out") ;
+  processFile("a.in", "a.out") ;
   processFile("b.in", "b.out") ;
   processFile("c.in", "c.out") ; 
   processFile("d.in", "d.out") ;
