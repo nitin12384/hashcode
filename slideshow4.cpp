@@ -99,6 +99,7 @@ class Slide
 	short int interestF(Slide * slide2, Photo * photos) ; //interest Factor function declaration
 	
 	short int interestF_bin(Slide * slide2, Photo * photos) ; //interest Factor function declaration ... binarysearch
+	short int interestF2(Slide * slide2, Photo * photos) ; //interest Factor function declaration ... 
 	
 	void printToFile(ofstream file)
 	{
@@ -497,6 +498,136 @@ short int Slide :: interestF(Slide* slide2, Photo* photos)
 }
 
 
+///*****************-*
+
+
+
+short int nCommonVector(vector<string> &vect1  ,  vector<string> &vect2 )
+{
+	if(dM) cout << "nCommonVector is called \n" ;
+	short int i=0, j=0 ;
+	short int res = 0 ;
+	
+	while(i < vect1.size() &&  j <  vect2.size()   )
+	{
+		
+		if(dM) cout << "Loop for i&j = " << i << "    " << j << "\n" ;
+		
+		if ( vect1.at(i)== vect2.at(j)   )
+		{
+			if(dM) cout <<" A common string found ! \n" ;
+			i++;
+			j++;
+			res++;
+		}
+		else if ( vect1.at(i) > vect2.at(j)  )
+			j++;
+		else
+			i++;
+	}
+	
+	return res;
+}
+
+//**************
+
+short int Slide :: interestF2(Slide* slide2, Photo* photos)
+{
+	
+	if(dM) cout << "interestF2 is called \n" ;
+	// interestF = min (s1.tags - s2.tags , s1.tags ^ s2.tags , s2.tags - s1.tags )
+	short int nCommonTags = 0;
+	string search;
+	bool found = 0;
+	// ******************* Try to get better algo for counting common tags *********************
+	
+	for(int i=0; i<nTags1; i++) // all tags in slide1 and photo1
+	{
+		search = (photos + photo1)->tags[i] ;		// photos + photo1 -> photo1 in array
+		found = 0;
+		
+		for(int j=0; j< (slide2->nTags1) ; j++) // all tags of photo1 of slide2
+		{
+		 	if( search == ( (photos + slide2->photo1)->tags[j] ) )
+		 	{
+		 		// found a tag of s1 in s2
+		 		if(dM) cout << "A Common Tag of photo1 was found in photo1 !! \n" ;
+		 		nCommonTags++ ;
+		 		found = 1;
+		 		break;
+		 	}
+		 	
+		}
+		
+		if(!(slide2->isHor) && (!found)) // slide 2 is vertical its got more tags and we didn't found our search till yet
+		{
+			for(int j=0; j< (slide2->nTags2) ; j++) // all tags of photo2 of slide2
+			{
+			 	if( search == ( (photos + slide2->photo2)->tags[j] ) )
+			 	{
+			 		// found a tag of s1 in s2
+		 			if(dM) cout << "A Common Tag of photo1 was found in photo 2!! \n" ;
+			 		nCommonTags++ ;
+			 		found = 1;
+			 		break;
+			 	}
+		 	
+			}
+		}
+		// searching all common tags of slide1's photo1 in whole slide2 completed
+	}
+	
+		
+	if( !isHor ) // slide1 has got photo2 also
+	{
+		for(int i=0; i<nTags2; i++) // all tags in slide1 and photo2
+		{
+			search = (photos + photo2)->tags[i] ;		// photos + photo2 -> photo2 in array
+			found = 0;
+			
+			for(int j=0; j< (slide2->nTags1) ; j++) // all tags of photo1 of slide2
+			{
+			 	if( search == ( (photos + slide2->photo1)->tags[j] ) )
+			 	{
+			 		// found a tag of s1 in s2
+			 		if(dM) cout << "A Common Tag of photo2 was found in photo1 !! \n" ;
+			 		nCommonTags++ ;
+			 		found = 1;
+			 		break;
+			 	}
+		 	
+			}
+		
+			if(!(slide2->isHor) && (!found)) // slide 2 is vertical its got more tags and we didn't found our search till yet
+			{
+				for(int j=0; j< (slide2->nTags2) ; j++) // all tags of photo2 of slide2
+				{
+				 	if( search == ( (photos + slide2->photo2)->tags[j] ) )
+				 	{
+				 		// found a tag of s1 in s2
+			 			if(dM) cout << "A Common Tag of photo2 was found in photo 2!! \n" ;
+				 		nCommonTags++ ;
+				 		found = 1;
+				 		break;
+				 	}
+		 	
+				}
+			}
+		// searching all common tags of slide1's photo1 in whole slide2 completed
+		}
+	}
+	
+	if(dM) cout << "Finally nCommonTags = " << nCommonTags << endl;
+	
+	short int res = MIN( (nTags1+nTags2)-nCommonTags, nCommonTags, (slide2->nTags1 + slide2->nTags2)-nCommonTags ) ;
+	
+	if(dM) cout << "Finally Interest factor  = " << res << endl ;
+	return res;
+}
+
+
+
+//*************
 
 short int Slide :: interestF_bin(Slide* slide2, Photo* photos)
 {
@@ -590,7 +721,7 @@ short int Slide :: interestF_bin(Slide* slide2, Photo* photos)
 int main()
 {
 	
-	/*
+	
 	vector<string> s;
 	s.push_back("aba");
 	s.push_back("yhaba");
@@ -598,11 +729,19 @@ int main()
 	s.push_back("ijaba");
 	s.push_back("akoba");
 	
-	sort(s.begin() , s.end()) ;
-	string s1 =  "abas" ;
-	cout << binSearchVector(s, s1  ) ;
 	
-	*/
+	vector<string> s1  ;
+	s1.push_back("aba");
+	s1.push_back("yhaba");
+	s1.push_back("inka");
+	s1.push_back("ihjaba");
+	s1.push_back("akoba");
+	
+	
+	
+	cout << nCommonVector(s, s1  ) ;
+	
+	
 
 
 
